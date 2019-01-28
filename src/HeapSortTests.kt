@@ -3,29 +3,28 @@ import kotlincommon.printed
 import kotlincommon.swap
 import kotlincommon.test.shouldEqual
 import org.junit.Test
-import java.util.*
 
 class HeapSortTests {
-    @Test fun `sort list of integers`() {
+    @Test fun `sort a list of integers`() {
         fun List<Int>.canBeSorted() =
             this.permutations().forEach {
                 it.printed().heapSort() shouldEqual this
             }
 
-        emptyList<Int>().canBeSorted()
+        listOf(1).canBeSorted()
+        listOf(1, 2).canBeSorted()
         listOf(1, 2, 3).canBeSorted()
         listOf(1, 2, 3, 4).canBeSorted()
         listOf(1, 2, 3, 4, 5).canBeSorted()
         listOf(1, 2, 3, 4, 5, 6).canBeSorted()
     }
 
-    @Test fun `array-based binary heap`() {
-        val heap = BinaryHeap()
-
-        heap.add(4)
+    @Test fun `array-based binary min heap`() {
+        val heap = Heap()
         heap.add(3)
         heap.add(2)
         heap.add(1)
+        heap.add(4)
 
         heap.remove() shouldEqual 1
         heap.remove() shouldEqual 2
@@ -34,19 +33,19 @@ class HeapSortTests {
     }
 }
 
-fun List<Int>.heapSort(): List<Int> {
-    val heap = BinaryHeap()
-    forEach { heap.add(it) }
-
+private fun List<Int>.heapSort(): List<Int> {
     val result = ArrayList<Int>()
+    val heap = Heap()
+    forEach { heap.add(it) }
     while (heap.isNotEmpty()) {
         result.add(heap.remove())
     }
     return result
 }
 
-class BinaryHeap {
-    private val array = Array(100, { 0 })
+
+class Heap {
+    private val array = arrayOf(0, 0, 0, 0, 0, 0, 0, 0)
     private var size = 0
 
     fun add(element: Int) {
@@ -63,7 +62,9 @@ class BinaryHeap {
     }
 
     private fun pushDown(index: Int) {
-        val minIndex = listOf(index, index * 2 + 1, index * 2 + 2)
+        val leftChild = index * 2 + 1
+        val rightChild = index * 2 + 2
+        val minIndex = listOf(index, leftChild, rightChild)
             .filter { it < size }
             .minBy { array[it] } ?: return
 
