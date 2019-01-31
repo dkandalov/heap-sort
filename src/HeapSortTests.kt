@@ -7,10 +7,11 @@ import org.junit.Test
 class HeapSortTests {
     @Test fun `sort a list of integers`() {
         fun List<Int>.canBeSorted() =
-            this.permutations().forEach {
+            permutations().forEach {
                 it.printed().heapSort() shouldEqual this
             }
 
+        listOf<Int>().canBeSorted()
         listOf(1).canBeSorted()
         listOf(1, 2).canBeSorted()
         listOf(1, 2, 3).canBeSorted()
@@ -21,6 +22,7 @@ class HeapSortTests {
 
     @Test fun `array-based binary min heap`() {
         val heap = Heap()
+
         heap.add(3)
         heap.add(2)
         heap.add(1)
@@ -33,11 +35,11 @@ class HeapSortTests {
     }
 }
 
-private fun List<Int>.heapSort(): List<Int> {
-    val result = ArrayList<Int>()
+fun List<Int>.heapSort(): List<Int> {
     val heap = Heap()
     forEach { heap.add(it) }
-    while (heap.isNotEmpty()) {
+    val result = ArrayList<Int>()
+    while (heap.size > 0) {
         result.add(heap.remove())
     }
     return result
@@ -46,11 +48,20 @@ private fun List<Int>.heapSort(): List<Int> {
 
 class Heap {
     private val array = arrayOf(0, 0, 0, 0, 0, 0, 0, 0)
-    private var size = 0
+    var size = 0
 
     fun add(element: Int) {
         array[size++] = element
         pullUp(size - 1)
+    }
+
+    private fun pullUp(index: Int) {
+        //if (index == 0) return
+        val parentIndex = (index /*- 1*/) / 2
+        if (array[parentIndex] > array[index]) {
+            array.swap(parentIndex, index)
+            pullUp(parentIndex)
+        }
     }
 
     fun remove(): Int {
@@ -72,18 +83,5 @@ class Heap {
             array.swap(minIndex, index)
             pushDown(minIndex)
         }
-    }
-
-    private fun pullUp(index: Int) {
-        if (index == 0) return
-        val parentIndex = (index - 1) / 2
-        if (array[parentIndex] > array[index]) {
-            array.swap(parentIndex, index)
-            pullUp(parentIndex)
-        }
-    }
-
-    fun isNotEmpty(): Boolean {
-        return size > 0
     }
 }
