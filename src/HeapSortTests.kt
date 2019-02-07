@@ -1,5 +1,4 @@
 import kotlincommon.permutations
-import kotlincommon.printed
 import kotlincommon.swap
 import kotlincommon.test.shouldEqual
 import org.junit.Test
@@ -8,7 +7,7 @@ class HeapSortTests {
     @Test fun `sort a list of integers`() {
         fun List<Int>.canBeSorted() =
             permutations().forEach {
-                it.printed().heapSort() shouldEqual this
+                it.heapSort() shouldEqual this
             }
 
         listOf<Int>().canBeSorted()
@@ -37,7 +36,7 @@ class HeapSortTests {
 
 fun List<Int>.heapSort(): List<Int> {
     val heap = Heap()
-    forEach { heap.add(it) }
+    forEach { element -> heap.add(element) }
     val result = ArrayList<Int>()
     while (heap.size > 0) {
         result.add(heap.remove())
@@ -56,8 +55,8 @@ class Heap {
     }
 
     private fun pullUp(index: Int) {
-        //if (index == 0) return
-        val parentIndex = (index /*- 1*/) / 2
+        if (index == 0) return
+        val parentIndex = (index - 1) / 2
         if (array[parentIndex] > array[index]) {
             array.swap(parentIndex, index)
             pullUp(parentIndex)
