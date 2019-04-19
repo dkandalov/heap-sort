@@ -67,7 +67,7 @@ class Heap {
         val result = array[0]
         array[0] = array[size - 1]
         size--
-        if (size > 0) pushDown(0)
+        pushDown(0)
         return result
     }
 
@@ -76,7 +76,7 @@ class Heap {
         val rightChild = index * 2 + 2
         val minIndex = listOf(index, leftChild, rightChild)
             .filter { it < size }
-            .minBy { array[it] }!!
+            .minBy { array[it] } ?: return
 
         if (minIndex != index) {
             array.swap(minIndex, index)
